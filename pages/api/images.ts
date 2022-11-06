@@ -29,7 +29,7 @@ export default async function handler(
   }
 
   // Deconstruct URL params.
-  const query = req.query;
+  const query:ParamProps = req.query;
   const { provider = '' }: URLProps = query;
 
   if (!provider) {

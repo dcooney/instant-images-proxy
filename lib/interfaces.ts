@@ -11,7 +11,7 @@ export interface URLProps {
 }
 
 export interface ParamProps {
-  provider: string | undefined;
-  per_page: string;
+  provider?: string | undefined;
+  per_page?: string;
   [key: string]: any | undefined;
 }
