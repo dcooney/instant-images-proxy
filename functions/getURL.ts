@@ -11,10 +11,6 @@ export default function getURL(
 ): string {
   const { dest } = params;
 
-  if (params.provider) {
-    // Delete `provider` from params.
-    delete params.provider;
-  }
   if (params.dest) {
     // Delete `dest` from params.
     delete params.dest;

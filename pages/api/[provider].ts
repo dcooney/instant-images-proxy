@@ -5,8 +5,12 @@ import getURL from '~/functions/getURL';
 import { APIKeyProps, ParamProps, URLProps } from '~/lib/interfaces';
 import initMiddleware from '~/lib/middleware';
 
-// Initializing the cors middleware
-// More about options here: https://github.com/expressjs/cors#configuration-options
+// TODO: Improve API error handling.
+
+/**
+ * Initializing the cors middleware.
+ * @see https://github.com/expressjs/cors#configuration-options
+ */
 const cors = initMiddleware(
   Cors({
     methods: ['GET']
@@ -26,7 +30,7 @@ export default async function handler(
   // Deconstruct URL params.
   const { query }: ParamProps = req;
   const {
-    provider = '',
+    provider = 'unsplash',
     dest = '',
     client_id = '',
     key = ''
