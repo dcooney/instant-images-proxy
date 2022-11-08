@@ -7,6 +7,9 @@ export interface APIKeyProps {
 
 export interface URLProps {
   provider?: string;
+  dest?: string;
+  client_id?: string;
+  key?: string;
   [key: string]: any | undefined;
 }
 
