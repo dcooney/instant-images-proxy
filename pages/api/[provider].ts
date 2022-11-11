@@ -9,11 +9,8 @@ export const config = {
 };
 
 export default async function handler(req: NextRequest) {
-  // Get incoming URL.
-  const href = req.nextUrl.href;
-
-  // Get all query params.
-  const query = getParams(href);
+  // Get all query params from incoming URL.
+  const query = getParams(req.url);
 
   // Deconstruct URL params.
   const {
