@@ -31,10 +31,13 @@ export default async function handler(req: NextRequest) {
     // Bail early when provider doesn't exist.
     return new Response(
       JSON.stringify({
-        error: `No provider or destination URL set.`
+        error: {
+          status: 503,
+          statusText: `No provider or destination URL set.`
+        }
       }),
       {
-        status: 500,
+        status: 503,
         statusText: `No provider or destination URL set.`
       }
     );
@@ -45,32 +48,41 @@ export default async function handler(req: NextRequest) {
 
   try {
     const response = await fetch(url, { headers });
-
-    // API Error.
-    if (response.status !== 200) {
-      return new Response(
-        JSON.stringify({
-          error: `${response.statusText}`
-        }),
-        {
-          status: response.status,
-          statusText: response.statusText
-        }
-      );
-    }
+    const { status, statusText } = response;
 
     // Success.
-    const data = await response.json();
-    return new Response(JSON.stringify(data), {
-      status: response.status,
-      statusText: response.statusText
-    });
-  } catch (error) {
-    // Issue? Leave a message and bail.
-    console.error(error);
+    if (status === 200) {
+      const data = await response.json();
+      return new Response(JSON.stringify(data), {
+        status: status,
+        statusText: statusText
+      });
+    }
+
+    // Pexels returns 500 with invalid API key.
+    const statusCode = status === 500 ? 401 : status;
+
+    // Error Response.
     return new Response(
       JSON.stringify({
-        error: `${error}`
+        error: {
+          status: statusCode,
+          statusText: statusText
+        }
+      }),
+      {
+        status: statusCode,
+        statusText: statusText
+      }
+    );
+  } catch (error) {
+    // Server Error: Leave a message and bail.
+    return new Response(
+      JSON.stringify({
+        error: {
+          status: 500,
+          statusText: error
+        }
       }),
       {
         status: 500,
