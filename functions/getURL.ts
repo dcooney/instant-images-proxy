@@ -22,7 +22,7 @@ export default function getURL(
     ...getAPIVar(provider, keys[provider])
   };
 
-  // G
+  // Build the URL.
   const url = new URL(dest);
   Object.keys(queryParams).forEach(key => {
     url.searchParams.append(key, queryParams[key]);

@@ -1,8 +1,8 @@
 import { NextRequest } from 'next/server';
-import getHeaders from '~/functions/getHeaders';
+import getHeaders, { getResponseHeaders } from '~/functions/getHeaders';
 import getParams from '~/functions/getParams';
 import getURL from '~/functions/getURL';
-import { APIKeyProps, ParamProps, URLProps } from '~/lib/interfaces';
+import { APIKeyProps, URLProps } from '~/lib/interfaces';
 
 export const config = {
   runtime: 'experimental-edge'
@@ -49,13 +49,15 @@ export default async function handler(req: NextRequest) {
   try {
     const response = await fetch(url, { headers });
     const { status, statusText } = response;
+    const resHeaders = getResponseHeaders(response);
 
     // Success.
     if (status === 200) {
       const data = await response.json();
       return new Response(JSON.stringify(data), {
         status: status,
-        statusText: statusText
+        statusText: statusText,
+        headers: resHeaders
       });
     }
 
@@ -72,7 +74,8 @@ export default async function handler(req: NextRequest) {
       }),
       {
         status: statusCode,
-        statusText: statusText
+        statusText: statusText,
+        headers: resHeaders
       }
     );
   } catch (error) {

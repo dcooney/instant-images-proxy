@@ -1,7 +1,7 @@
 import { APIKeyProps } from '~/lib/interfaces';
 
 /**
- * Build the API fetch headers.
+ * Build the API fetch request headers.
  */
 export default function getHeaders(provider: string, keys: APIKeyProps) {
   let headers = {};
@@ -15,6 +15,34 @@ export default function getHeaders(provider: string, keys: APIKeyProps) {
     default:
       break;
   }
+
+  return headers;
+}
+
+/**
+ * Build the API response headers sent back to the front facing application.
+ *
+ * @see https://unsplash.com/documentation#rate-limiting
+ * @see https://pixabay.com/api/docs/
+ * @see https://www.pexels.com/api/documentation/#statistics
+ */
+export function getResponseHeaders(res: Response): HeadersInit {
+  const xratelimit = res.headers.get('X-Ratelimit-Limit');
+  const xratelimitremaining = res.headers.get('X-Ratelimit-Remaining');
+  const xratelimitreset = res.headers.get('X-Ratelimit-Reset');
+
+  const headers = {
+    'Cache-Control':
+      'max-age=7200,stale-if-error=3600,stale-while-revalidate=60',
+    'Access-Control-Allow-Methods': 'GET',
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Expose-Headers':
+      'Link,X-Total,X-Per-Page,X-RateLimit-Limit,X-RateLimit-Remaining,X-RateLimit-Reset',
+    'Access-Control-Request-Method': '*',
+    'X-RateLimit-Limit': `${xratelimit}`,
+    'X-RateLimit-Remaining': `${xratelimitremaining}`,
+    'X-RateLimit-Reset': `${xratelimitreset}`
+  };
 
   return headers;
 }
