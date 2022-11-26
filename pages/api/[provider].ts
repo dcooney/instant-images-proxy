@@ -43,8 +43,8 @@ export default async function handler(req: NextRequest) {
 
   // Allowed URLs
   const base_url = providers[provider as keyof typeof providers]?.base_url;
-  if (dest.indexOf(base_url) === -1) {
-    // Bail early if dest URL is not an allowed URL.
+  if (!base_url || dest.indexOf(base_url) === -1) {
+    // Bail early if destination URL is not an allowed URL.
     has_error = true;
     error_msg = 'Destination URL is not a valid API URL.';
   }
