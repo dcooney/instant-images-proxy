@@ -20,7 +20,7 @@ export default function getHeaders(provider: string, keys: APIKeyProps) {
 }
 
 /**
- * Build the API response headers sent back to the front facing application.
+ * Build the API response headers for the frontend application.
  *
  * @see https://unsplash.com/documentation#rate-limiting
  * @see https://pixabay.com/api/docs/
@@ -32,16 +32,27 @@ export function getResponseHeaders(res: Response): HeadersInit {
   const xratelimitreset = res.headers.get('X-Ratelimit-Reset');
 
   const headers = {
-    'Cache-Control':
-      'max-age=7200,stale-if-error=3600,stale-while-revalidate=60',
-    'Access-Control-Allow-Methods': 'GET',
-    'Access-Control-Allow-Origin': '*',
+    ...getStandardHeaders(),
     'Access-Control-Expose-Headers':
       'Link,X-Total,X-Per-Page,X-RateLimit-Limit,X-RateLimit-Remaining,X-RateLimit-Reset',
     'Access-Control-Request-Method': '*',
     'X-RateLimit-Limit': `${xratelimit}`,
     'X-RateLimit-Remaining': `${xratelimitremaining}`,
     'X-RateLimit-Reset': `${xratelimitreset}`
+  };
+
+  return headers;
+}
+
+/**
+ * Get standard API response headers for the frontend application.
+ */
+export function getStandardHeaders() {
+  const headers = {
+    'Cache-Control':
+      'max-age=7200,stale-if-error=3600,stale-while-revalidate=60',
+    'Access-Control-Allow-Methods': 'GET',
+    'Access-Control-Allow-Origin': '*'
   };
 
   return headers;

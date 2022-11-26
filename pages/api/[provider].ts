@@ -1,8 +1,12 @@
 import { NextRequest } from 'next/server';
-import getHeaders, { getResponseHeaders } from '~/functions/getHeaders';
+import getHeaders, {
+  getStandardHeaders,
+  getResponseHeaders
+} from '~/functions/getHeaders';
 import getParams from '~/functions/getParams';
 import getURL from '~/functions/getURL';
 import { APIKeyProps, URLProps } from '~/lib/interfaces';
+import providers from '~/lib/providers';
 
 export const config = {
   runtime: 'experimental-edge'
@@ -27,18 +31,37 @@ export default async function handler(req: NextRequest) {
     pexels: key ? key : process.env.PEXELS_API_KEY
   };
 
+  let has_error = false;
+  let error_msg = '';
+
+  // No provider or destination.
   if (!provider || !dest) {
     // Bail early when provider doesn't exist.
+    has_error = true;
+    error_msg = 'No provider or destination URL set.';
+  }
+
+  // Allowed URLs
+  const base_url = providers[provider as keyof typeof providers]?.base_url;
+  if (dest.indexOf(base_url) === -1) {
+    // Bail early if dest URL is not an allowed URL.
+    has_error = true;
+    error_msg = 'Destination URL is not a valid API URL.';
+  }
+
+  if (has_error) {
+    // Return the error response.
     return new Response(
       JSON.stringify({
         error: {
           status: 503,
-          statusText: `No provider or destination URL set.`
+          statusText: error_msg
         }
       }),
       {
         status: 503,
-        statusText: `No provider or destination URL set.`
+        statusText: error_msg,
+        headers: getStandardHeaders()
       }
     );
   }
@@ -89,7 +112,8 @@ export default async function handler(req: NextRequest) {
       }),
       {
         status: 500,
-        statusText: 'Internal Server Error'
+        statusText: 'Internal Server Error',
+        headers: getStandardHeaders()
       }
     );
   }
