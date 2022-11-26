@@ -13,9 +13,9 @@ A small proxy server for [Instant Images](https://github.com/dcooney/instant-ima
 API requests require `env` variables for each of the providers. Create an `.env.local` file in the project root and add the following:
 
 ```bash
-UNSPLASH_API_KEY='xxxxxxxxxxxxxxxxxxxx'
-PIXABAY_API_KEY='xxxxxxxxxxxxxxxxxxxx'
-PEXELS_API_KEY='xxxxxxxxxxxxxxxxxxxx'
+UNSPLASH_API_KEY='xxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+PIXABAY_API_KEY='xxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+PEXELS_API_KEY='xxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 ```
 
 | Provider    | Variable Name    |
