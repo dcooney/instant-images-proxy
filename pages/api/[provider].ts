@@ -17,6 +17,8 @@ export default async function handler(req: NextRequest) {
   // Get all query params from incoming URL.
   const query = getParams(req.url);
 
+  const ads = false;
+
   // Deconstruct URL params.
   const {
     provider = 'unsplash',
@@ -79,7 +81,7 @@ export default async function handler(req: NextRequest) {
     // Success.
     if (status === 200) {
       const data = await response.json();
-      const results = formatData(data, provider, search); // Format data.
+      const results = ads ? formatData(data, provider, search) : data; // Format data.
       return new Response(JSON.stringify(results), {
         status: status,
         statusText: statusText,
