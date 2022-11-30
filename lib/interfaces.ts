@@ -15,6 +15,14 @@ export interface URLProps {
 
 export interface ParamProps {
   provider?: string | undefined;
+  search?: string | undefined;
   per_page?: string;
+  [key: string]: any | undefined;
+}
+
+export interface DataProps {
+  hits?: any;
+  photos?: any;
+  results?: any;
   [key: string]: any | undefined;
 }

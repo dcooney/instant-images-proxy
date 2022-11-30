@@ -16,6 +16,11 @@ export default function getURL(
     delete params.dest;
   }
 
+  if (params.search) {
+    // Delete `search` from params.
+    delete params.search;
+  }
+
   // Build query params.
   const queryParams = {
     ...params,

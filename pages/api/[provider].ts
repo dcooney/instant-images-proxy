@@ -1,7 +1,8 @@
 import { NextRequest } from 'next/server';
+import formatData from '~/functions/formatResults';
 import getHeaders, {
-  getStandardHeaders,
-  getResponseHeaders
+  getResponseHeaders,
+  getStandardHeaders
 } from '~/functions/getHeaders';
 import getParams from '~/functions/getParams';
 import getURL from '~/functions/getURL';
@@ -19,6 +20,7 @@ export default async function handler(req: NextRequest) {
   // Deconstruct URL params.
   const {
     provider = 'unsplash',
+    search = false,
     dest = '',
     client_id = '',
     key = ''
@@ -77,7 +79,8 @@ export default async function handler(req: NextRequest) {
     // Success.
     if (status === 200) {
       const data = await response.json();
-      return new Response(JSON.stringify(data), {
+      const results = !search ? formatData(data, provider) : data; // Format data if not search.
+      return new Response(JSON.stringify(results), {
         status: status,
         statusText: statusText,
         headers: resHeaders
