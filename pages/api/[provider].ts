@@ -79,7 +79,7 @@ export default async function handler(req: NextRequest) {
     // Success.
     if (status === 200) {
       const data = await response.json();
-      const results = !search ? formatData(data, provider) : data; // Format data if not search.
+      const results = formatData(data, provider, search); // Format data.
       return new Response(JSON.stringify(results), {
         status: status,
         statusText: statusText,

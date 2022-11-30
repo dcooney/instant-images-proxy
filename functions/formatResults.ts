@@ -6,7 +6,11 @@ import { DataProps } from '~/lib/interfaces';
  * Note: This is required because providers return data in different object keys.
  * e.g. Pexels = 'photos, Pixabay = 'hits', Unsplash = null
  */
-export default function formatData(data: object, provider: string): object {
+export default function formatData(
+  data: DataProps,
+  provider: string,
+  search: string
+): object {
   const results: DataProps = data;
 
   const ad = {
@@ -29,28 +33,42 @@ export default function formatData(data: object, provider: string): object {
   /**
    * Generate random number between min/max values.
    */
-  function randomIntFromInterval(min: number = 0, max: number = 19) {
+  function getRandomNumber(min: number = 0, max: number = 19) {
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
-  let len = 0; // Length.
+  let len = 0; // Default array length.
+  const min = 9; // Minimum results to inject ad data.
+
+  // Switch the providers.
   switch (provider) {
     case 'unsplash':
-      len = results.length;
-      // Inject data.
-      results.splice(randomIntFromInterval(0, len as number), 0, ad);
+      if (search === 'true') {
+        // Search results are returned in `results` object.
+        len = results['results'].length - 1;
+        if (len > min) {
+          results['results'].splice(getRandomNumber(0, len as number), 0, ad);
+        }
+      } else {
+        len = results.length - 1;
+        if (len > min) {
+          results.splice(getRandomNumber(0, len as number), 0, ad);
+        }
+      }
       break;
 
     case 'pixabay':
-      len = results['hits'].length;
-      // Inject data.
-      results['hits'].splice(randomIntFromInterval(0, len as number), 0, ad);
+      len = results['hits'].length - 1;
+      if (len > min) {
+        results['hits'].splice(getRandomNumber(0, len as number), 0, ad);
+      }
       break;
 
     case 'pexels':
-      len = results['photos'].length;
-      // Inject data.
-      results['photos'].splice(randomIntFromInterval(0, len as number), 0, ad);
+      len = results['photos'].length - 1;
+      if (len > min) {
+        results['photos'].splice(getRandomNumber(0, len as number), 0, ad);
+      }
       break;
 
     default:
