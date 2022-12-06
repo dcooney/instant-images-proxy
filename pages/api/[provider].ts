@@ -17,6 +17,7 @@ export default async function handler(req: NextRequest) {
   // Get all query params from incoming URL.
   const query = getParams(req.url);
 
+  // Display ad results.
   const ads = false;
 
   // Deconstruct URL params.
