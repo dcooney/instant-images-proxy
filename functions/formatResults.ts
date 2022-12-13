@@ -4,22 +4,23 @@ import { sponsorData } from '~/lib/sponsorship';
 import { getRandomNumber } from './helpers';
 
 /**
- * Format API results to remove unnecessary data and save data transfer KBs.
+ * Format API results to remove unnecessary data and save data transfer.
  */
 export default function formatData(
   data: DataProps,
   provider: string,
   search: string | boolean
 ): DataProps {
-  let results: DataProps = [];
   const key = providers[provider as keyof typeof providers]?.arr_key;
 
   switch (provider) {
     // Unsplash
     case 'unsplash':
-      results = search === 'true' ? data[key] : data; // Pluck results.
+      // Search results returned in `results` object.
+      const results = search === 'true' ? data[key] : data;
 
-      results?.length &&
+      results &&
+        results?.length &&
         results.map((result: any) => {
           // Remove the following objects from Unsplash API results.
           delete result?.urls?.raw;
@@ -38,13 +39,12 @@ export default function formatData(
           delete result?.user?.profile_image?.large;
           return result;
         });
-
-      return results;
+      break;
 
     case 'pexels':
-      results = data[key]; // Pluck results.
-      results?.length &&
-        results.map((result: any) => {
+      data &&
+        data[key]?.length &&
+        data[key].map((result: any) => {
           // Remove the following objects from results.
           delete result?.src?.large2x;
           delete result?.src?.medium;
@@ -54,11 +54,12 @@ export default function formatData(
           return result;
         });
 
-      return results;
+      break;
 
     default:
-      return data;
+      break;
   }
+  return data;
 }
 
 /**
@@ -75,7 +76,6 @@ export function formatSponsorData(
   if (!data || data.length < 1) {
     return [];
   }
-  const results: DataProps = data;
 
   let len = 0; // Default array length.
   const min = 10; // Minimum results to inject sponsorship.
@@ -84,28 +84,25 @@ export function formatSponsorData(
   // Switch the providers.
   switch (provider) {
     case 'unsplash':
-      len = search === 'true' ? results[key].length - 1 : results.length - 1;
+      // Search results returned in `results` object.
+      len = search === 'true' ? data[key].length - 1 : data.length - 1;
+
       if (search === 'true') {
-        // Search results are returned in `results` object.
         if (len > min) {
-          results[key].splice(
-            getRandomNumber(0, len as number),
-            0,
-            sponsorData
-          );
+          data[key].splice(getRandomNumber(0, len as number), 0, sponsorData);
         }
       } else {
         if (len > min) {
-          results.splice(getRandomNumber(0, len as number), 0, sponsorData);
+          data.splice(getRandomNumber(0, len as number), 0, sponsorData);
         }
       }
       break;
 
     case 'pixabay':
     case 'pexels':
-      len = results[key].length - 1;
+      len = data[key].length - 1;
       if (len > min) {
-        results[key].splice(getRandomNumber(0, len as number), 0, sponsorData);
+        data[key].splice(getRandomNumber(0, len as number), 0, sponsorData);
       }
       break;
 
@@ -113,5 +110,5 @@ export function formatSponsorData(
       break;
   }
 
-  return results;
+  return data;
 }
