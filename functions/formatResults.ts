@@ -1,4 +1,65 @@
 import { DataProps } from '~/lib/interfaces';
+import providers from '~/lib/providers';
+import { sponsorData } from '~/lib/sponsorship';
+import { getRandomNumber } from './helpers';
+
+/**
+ * Format API results to remove unnecessary data and save data transfer KBs.
+ */
+export default function formatData(
+  data: DataProps,
+  provider: string,
+  search: string | boolean
+): DataProps {
+  let results: DataProps = [];
+  const key = providers[provider as keyof typeof providers]?.arr_key;
+
+  switch (provider) {
+    // Unsplash
+    case 'unsplash':
+      results = search === 'true' ? data[key] : data; // Pluck results.
+
+      results?.length &&
+        results.map((result: any) => {
+          // Remove the following objects from Unsplash API results.
+          delete result?.urls?.raw;
+          delete result?.urls?.regular;
+          delete result?.urls?.small_s3;
+          delete result?.links?.self;
+          delete result?.links?.download;
+          delete result?.links?.download_location;
+          delete result?.tags;
+          delete result?.sponsorship;
+          delete result?.current_user_collections;
+          delete result?.topic_submissions;
+          delete result?.user.links;
+          delete result?.user.social;
+          delete result?.user?.profile_image?.medium;
+          delete result?.user?.profile_image?.large;
+          return result;
+        });
+
+      return results;
+
+    case 'pexels':
+      results = data[key]; // Pluck results.
+      results?.length &&
+        results.map((result: any) => {
+          // Remove the following objects from results.
+          delete result?.src?.large2x;
+          delete result?.src?.medium;
+          delete result?.src?.portrait;
+          delete result?.src?.landscape;
+          delete result?.src?.small;
+          return result;
+        });
+
+      return results;
+
+    default:
+      return data;
+  }
+}
 
 /**
  * Inject data into the returned data object.
@@ -6,68 +67,45 @@ import { DataProps } from '~/lib/interfaces';
  * Note: This is required because providers return data in different object keys.
  * e.g. Pexels = 'photos, Pixabay = 'hits', Unsplash = null
  */
-export default function formatData(
+export function formatSponsorData(
   data: DataProps,
   provider: string,
-  search: string
+  search: string | boolean
 ): object {
+  if (!data || data.length < 1) {
+    return [];
+  }
   const results: DataProps = data;
 
-  const ad = {
-    id: 'ID-1234566',
-    type: 'instant-images-ad',
-    data: {
-      title: 'Gravity Forms',
-      description: 'Powerful data capture fueled by Gravity Forms.',
-      avatar:
-        'https://images.unsplash.com/profile-fb-1599732338-2f306e8de95c.jpg?ixlib=rb-4.0.3&crop=faces&fit=crop&w=32&h=32',
-      url: 'https://google.com?ref=instant-images-wordpress',
-      image: {
-        src:
-          'https://s38924.pcdn.co/wp-content/uploads/2022/06/gp-community-card-header-gpac-3-768x440.png',
-        alt: 'This is the alt'
-      }
-    }
-  };
-
-  /**
-   * Generate random number between min/max values.
-   */
-  function getRandomNumber(min: number = 0, max: number = 19) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-
   let len = 0; // Default array length.
-  const min = 9; // Minimum results to inject ad data.
+  const min = 10; // Minimum results to inject sponsorship.
+  const key = providers[provider as keyof typeof providers]?.arr_key;
 
   // Switch the providers.
   switch (provider) {
     case 'unsplash':
+      len = search === 'true' ? results[key].length - 1 : results.length - 1;
       if (search === 'true') {
         // Search results are returned in `results` object.
-        len = results['results'].length - 1;
         if (len > min) {
-          results['results'].splice(getRandomNumber(0, len as number), 0, ad);
+          results[key].splice(
+            getRandomNumber(0, len as number),
+            0,
+            sponsorData
+          );
         }
       } else {
-        len = results.length - 1;
         if (len > min) {
-          results.splice(getRandomNumber(0, len as number), 0, ad);
+          results.splice(getRandomNumber(0, len as number), 0, sponsorData);
         }
       }
       break;
 
     case 'pixabay':
-      len = results['hits'].length - 1;
-      if (len > min) {
-        results['hits'].splice(getRandomNumber(0, len as number), 0, ad);
-      }
-      break;
-
     case 'pexels':
-      len = results['photos'].length - 1;
+      len = results[key].length - 1;
       if (len > min) {
-        results['photos'].splice(getRandomNumber(0, len as number), 0, ad);
+        results[key].splice(getRandomNumber(0, len as number), 0, sponsorData);
       }
       break;
 

@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import formatData from '~/functions/formatResults';
+import formatData, { formatSponsorData } from '~/functions/formatResults';
 import getHeaders, {
   getResponseHeaders,
   getStandardHeaders
@@ -17,8 +17,8 @@ export default async function handler(req: NextRequest) {
   // Get all query params from incoming URL.
   const query = getParams(req.url);
 
-  // Display ad results.
-  const ads = false;
+  // Display sponsor results.
+  const sponsor = false;
 
   // Deconstruct URL params.
   const {
@@ -82,7 +82,10 @@ export default async function handler(req: NextRequest) {
     // Success.
     if (status === 200) {
       const data = await response.json();
-      const results = ads ? formatData(data, provider, search) : data; // Format data.
+      const formatted = formatData(data, provider, search); // Format results.
+      const results = sponsor
+        ? formatSponsorData(data, provider, search)
+        : formatted; // Inject sponsorship.
       return new Response(JSON.stringify(results), {
         status: status,
         statusText: statusText,
