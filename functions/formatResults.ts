@@ -3,7 +3,7 @@ import providers from '~/lib/providers';
 import getProp from './getProp';
 
 /**
- * Format API results to return only required data and in a normalized response.
+ * Format API results to return required data in a normalized response across providers.
  */
 export default function formatData(
   data: DataProps,
