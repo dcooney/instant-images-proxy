@@ -26,7 +26,7 @@ export default async function handler(req: NextRequest) {
     key = ''
   }: URLProps = query;
 
-  // Get the API keys.
+  // Get API keys.
   const keys: APIKeyProps = {
     unsplash: client_id ? client_id : process.env.UNSPLASH_API_KEY,
     pixabay: key ? key : process.env.PIXABAY_API_KEY,
@@ -34,20 +34,20 @@ export default async function handler(req: NextRequest) {
   };
 
   // Display sponsor results.
-  const sponsor = true;
+  const sponsor = false;
 
-  let has_error = false;
+  // Is this a search request?
+  const search = type === 'search';
+
+  let error = false;
   let error_msg = '';
 
   // No provider or type.
   if (!provider || !type) {
     // Bail early when provider doesn't exist.
-    has_error = true;
+    error = true;
     error_msg = 'No provider or API URL set.';
   }
-
-  // Is this a search request?
-  const search = type === 'search';
 
   // Get API URLs.
   const search_url = providers[provider as keyof typeof providers]?.api?.search;
@@ -56,11 +56,11 @@ export default async function handler(req: NextRequest) {
 
   if (!api_url) {
     // Bail early if destination URL is not an allowed URL.
-    has_error = true;
-    error_msg = 'Destination URL is not a valid API URL.';
+    error = true;
+    error_msg = 'API URL is not valid.';
   }
 
-  if (has_error) {
+  if (error) {
     // Return the error response.
     return new Response(
       JSON.stringify({
