@@ -1,10 +1,11 @@
 import { NextRequest } from 'next/server';
-import formatData, { formatSponsorData } from '~/functions/formatResults';
+import formatData from '~/functions/formatResults';
 import getHeaders, {
   getResponseHeaders,
   getStandardHeaders
 } from '~/functions/getHeaders';
 import getParams from '~/functions/getParams';
+import getSponsor from '~/functions/getSponsor';
 import getURL from '~/functions/getURL';
 import { APIKeyProps, URLProps } from '~/lib/interfaces';
 import providers from '~/lib/providers';
@@ -23,11 +24,12 @@ export default async function handler(req: NextRequest) {
   // Deconstruct URL params.
   const {
     provider = 'unsplash',
-    search = false,
-    dest = '',
+    type = 'photos',
     client_id = '',
     key = ''
   }: URLProps = query;
+
+  const search = type === 'search';
 
   // Get the API keys.
   const keys: APIKeyProps = {
@@ -39,16 +41,21 @@ export default async function handler(req: NextRequest) {
   let has_error = false;
   let error_msg = '';
 
-  // No provider or destination.
-  if (!provider || !dest) {
+  // No provider or type.
+  if (!provider || !type) {
     // Bail early when provider doesn't exist.
     has_error = true;
-    error_msg = 'No provider or destination URL set.';
+    error_msg = 'No provider or API URL set.';
   }
 
-  // Allowed URLs
-  const base_url = providers[provider as keyof typeof providers]?.base_url;
-  if (!base_url || dest.indexOf(base_url) === -1) {
+  // Get API URL.
+  let api_url: string =
+    providers[provider as keyof typeof providers]?.api?.photos;
+  if (search) {
+    api_url = providers[provider as keyof typeof providers]?.api?.search;
+  }
+
+  if (!api_url) {
     // Bail early if destination URL is not an allowed URL.
     has_error = true;
     error_msg = 'Destination URL is not a valid API URL.';
@@ -72,7 +79,7 @@ export default async function handler(req: NextRequest) {
   }
 
   const headers = getHeaders(provider, keys);
-  const url = getURL(provider, query, keys);
+  const url = getURL(api_url, provider, query, keys);
 
   try {
     const response = await fetch(url, { headers });
@@ -83,9 +90,7 @@ export default async function handler(req: NextRequest) {
     if (status === 200) {
       const data = await response.json();
       const formatted = formatData(data, provider, search); // Format results.
-      const results = sponsor
-        ? formatSponsorData(data, provider, search)
-        : formatted; // Inject sponsorship.
+      const results = sponsor ? getSponsor(data, provider, search) : formatted; // Inject sponsorship.
       return new Response(JSON.stringify(results), {
         status: status,
         statusText: statusText,

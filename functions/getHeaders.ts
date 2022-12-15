@@ -34,7 +34,7 @@ export function getResponseHeaders(res: Response): HeadersInit {
   const headers = {
     ...getStandardHeaders(),
     'Access-Control-Expose-Headers':
-      'Link,X-Total,X-Per-Page,X-RateLimit-Limit,X-RateLimit-Remaining,X-RateLimit-Reset',
+      'X-RateLimit-Limit,X-RateLimit-Remaining,X-RateLimit-Reset',
     'Access-Control-Request-Method': '*',
     'X-RateLimit-Limit': `${xratelimit}`,
     'X-RateLimit-Remaining': `${xratelimitremaining}`,
@@ -49,8 +49,7 @@ export function getResponseHeaders(res: Response): HeadersInit {
  */
 export function getStandardHeaders() {
   const headers = {
-    'Cache-Control':
-      'max-age=7200,stale-if-error=3600,stale-while-revalidate=60',
+    'Cache-Control': 's-maxage=300, stale-while-revalidate',
     'Access-Control-Allow-Methods': 'GET',
     'Access-Control-Allow-Origin': '*'
   };
