@@ -18,9 +18,6 @@ export default async function handler(req: NextRequest) {
   // Get all query params from incoming URL.
   const query = getParams(req.url);
 
-  // Display sponsor results.
-  const sponsor = false;
-
   // Deconstruct URL params.
   const {
     provider = 'unsplash',
@@ -29,14 +26,15 @@ export default async function handler(req: NextRequest) {
     key = ''
   }: URLProps = query;
 
-  const search = type === 'search';
-
   // Get the API keys.
   const keys: APIKeyProps = {
     unsplash: client_id ? client_id : process.env.UNSPLASH_API_KEY,
     pixabay: key ? key : process.env.PIXABAY_API_KEY,
     pexels: key ? key : process.env.PEXELS_API_KEY
   };
+
+  // Display sponsor results.
+  const sponsor = true;
 
   let has_error = false;
   let error_msg = '';
@@ -48,12 +46,13 @@ export default async function handler(req: NextRequest) {
     error_msg = 'No provider or API URL set.';
   }
 
-  // Get API URL.
-  let api_url: string =
-    providers[provider as keyof typeof providers]?.api?.photos;
-  if (search) {
-    api_url = providers[provider as keyof typeof providers]?.api?.search;
-  }
+  // Is this a search request?
+  const search = type === 'search';
+
+  // Get API URLs.
+  const search_url = providers[provider as keyof typeof providers]?.api?.search;
+  const photos_url = providers[provider as keyof typeof providers]?.api?.photos;
+  const api_url: string = search ? search_url : photos_url;
 
   if (!api_url) {
     // Bail early if destination URL is not an allowed URL.
@@ -90,7 +89,7 @@ export default async function handler(req: NextRequest) {
     if (status === 200) {
       const data = await response.json();
       const formatted = formatData(data, provider, search); // Format results.
-      const results = sponsor ? getSponsor(data, provider, search) : formatted; // Inject sponsorship.
+      const results = sponsor ? getSponsor(formatted) : formatted; // Inject sponsorship.
       return new Response(JSON.stringify(results), {
         status: status,
         statusText: statusText,

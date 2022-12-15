@@ -49,7 +49,7 @@ export function getResponseHeaders(res: Response): HeadersInit {
  */
 export function getStandardHeaders() {
   const headers = {
-    'Cache-Control': 's-maxage=300, stale-while-revalidate',
+    'Cache-Control': 's-maxage=3600, stale-while-revalidate',
     'Access-Control-Allow-Methods': 'GET',
     'Access-Control-Allow-Origin': '*'
   };

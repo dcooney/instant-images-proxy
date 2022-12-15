@@ -1,3 +1,14 @@
+export interface ProviderProps {
+  api_var: string;
+  arr_key: string;
+  search_var: string;
+  base_url: string;
+  api: {
+    photos: string;
+    search: string;
+  };
+}
+
 export interface APIKeyProps {
   unsplash?: string;
   pixabay?: string;
@@ -7,10 +18,10 @@ export interface APIKeyProps {
 
 export interface ResultsProps {
   total: any;
-  results: string;
+  results: ResultProps;
 }
 
-export interface ResultObjectProps {
+export interface ResultProps {
   id: any;
   permalink: any;
   likes: any;
@@ -41,6 +52,7 @@ export interface URLProps {
 export interface ParamProps {
   provider?: string | undefined;
   per_page?: string;
+  id?: string;
   [key: string]: any | undefined;
 }
 

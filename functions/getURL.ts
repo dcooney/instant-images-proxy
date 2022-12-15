@@ -29,15 +29,8 @@ export default function getURL(
 
   // Search by ID.
   if (params.type === 'search' && params.id) {
-    switch (provider) {
-      case 'unsplash':
-        api_url = `${
-          providers[provider as keyof typeof providers]?.api?.photos
-        }${params.id}`;
-        break;
-      default:
-        break;
-    }
+    api_url = getSearchIDUrl(provider, params.id);
+    params = {};
   }
 
   // Delete the following params before sending API request to providers.
@@ -59,4 +52,32 @@ export default function getURL(
   });
 
   return url?.href;
+}
+
+/**
+ * Get the API URL for searching by ID.
+ */
+function getSearchIDUrl(provider: string, id: string): string {
+  let url = '';
+  const base_url = providers[provider as keyof typeof providers]?.api?.photos;
+  switch (provider) {
+    case 'unsplash':
+      // https://api.unsplash.com/photos/{PHOTO_ID}
+      url = `${base_url}${id}`;
+      break;
+
+    case 'pixabay':
+      // https://pixabay.com/api/?id={PHOTO_ID}
+      url = `${base_url}?id=${id}`;
+      break;
+
+    case 'pexels':
+      // https://api.pexels.com/v1/photos/{PHOTO_ID}
+      url = `${base_url.replace('curated', 'photos')}/${id}`;
+      break;
+    default:
+      break;
+  }
+
+  return url;
 }

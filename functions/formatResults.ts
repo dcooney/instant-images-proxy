@@ -1,22 +1,27 @@
-import { DataProps, ResultObjectProps, ResultsProps } from '~/lib/interfaces';
+import { DataProps, ResultProps, ResultsProps } from '~/lib/interfaces';
 import providers from '~/lib/providers';
 import getProp from './getProp';
 
 /**
- * Format API results to remove unnecessary data and save data transfer.
+ * Format API results to return only required data and in a normalized response.
  */
 export default function formatData(
   data: DataProps,
   provider: string,
   search: boolean
 ): DataProps {
-  const key = providers[provider as keyof typeof providers]?.arr_key;
-
   let results: DataProps = [];
 
-  console.log(search);
+  const key = providers[provider as keyof typeof providers]?.arr_key;
+  const searchByID = search && data?.id;
 
-  // Access API results data.
+  /**
+   * Access API results data from response.
+   *
+   * Note: Depending on the type of API request, image data may be returned in various formats.
+   *       Pixabay & Pexels return image data in a nested object where unsplash returns as an array at the top level.
+   *       This switch attempts to pluck results data from the API response.
+   */
   switch (provider) {
     case 'pixabay':
     case 'pexels':
@@ -24,35 +29,32 @@ export default function formatData(
       break;
 
     case 'unsplash':
-      if (search) {
-        results = data[key];
-      } else {
-        results = data;
-      }
+      results = search ? data[key] : data;
       break;
   }
 
-  // Search by ID.
-  // Unsplash and Pexels return ID searches as a single object.
-  results = search && data?.id ? [data] : results;
+  /**
+   * Search by ID.
+   *
+   * Note: Unsplash and Pexels return ID lookups as a single object.
+   */
+  results = searchByID ? [data] : results;
 
-  // Build the new results object.
-  const resultsObj: ResultsProps = {
-    total: getTotal(data, provider),
+  // Build the new data object.
+  const obj: ResultsProps = {
+    total: searchByID ? results.length : getTotal(data, provider),
     results: buildResults(results, provider)
   };
 
-  return resultsObj;
+  return obj;
 }
 
 /**
  * Construct an individual result object.
+ * We construct this object to normalize the response of all sevice providers.
  */
-function buildResultObj(
-  result: object | any,
-  provider: string
-): ResultObjectProps {
-  const data: ResultObjectProps = {
+function buildResultObj(result: object | any, provider: string): ResultProps {
+  const data: ResultProps = {
     id: getProp(result, provider, 'id'),
     permalink: getProp(result, provider, 'permalink'),
     likes: getProp(result, provider, 'likes'),
