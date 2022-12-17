@@ -1,10 +1,11 @@
 import { NextRequest } from 'next/server';
-import formatData, { formatSponsorData } from '~/functions/formatResults';
+import formatData from '~/functions/formatResults';
 import getHeaders, {
   getResponseHeaders,
   getStandardHeaders
 } from '~/functions/getHeaders';
 import getParams from '~/functions/getParams';
+import getSponsor from '~/functions/getSponsor';
 import getURL from '~/functions/getURL';
 import { APIKeyProps, URLProps } from '~/lib/interfaces';
 import providers from '~/lib/providers';
@@ -14,57 +15,46 @@ export const config = {
 };
 
 export default async function handler(req: NextRequest) {
-  // Get all query params from incoming URL.
-  const query = getParams(req.url);
-
   // Display sponsor results.
   const sponsor = false;
+
+  // Get all query params from incoming URL.
+  const query = getParams(req.url);
 
   // Deconstruct URL params.
   const {
     provider = 'unsplash',
-    search = false,
-    dest = '',
+    type = 'photos',
     client_id = '',
     key = ''
   }: URLProps = query;
 
-  // Get the API keys.
+  // Get API keys.
   const keys: APIKeyProps = {
     unsplash: client_id ? client_id : process.env.UNSPLASH_API_KEY,
     pixabay: key ? key : process.env.PIXABAY_API_KEY,
     pexels: key ? key : process.env.PEXELS_API_KEY
   };
 
-  let has_error = false;
-  let error_msg = '';
+  // API URLs.
+  const search_url = providers[provider as keyof typeof providers]?.api?.search;
+  const photos_url = providers[provider as keyof typeof providers]?.api?.photos;
+  const search = type === 'search'; // Is this a search request?
+  const api_url: string = search ? search_url : photos_url;
 
-  // No provider or destination.
-  if (!provider || !dest) {
-    // Bail early when provider doesn't exist.
-    has_error = true;
-    error_msg = 'No provider or destination URL set.';
-  }
-
-  // Allowed URLs
-  const base_url = providers[provider as keyof typeof providers]?.base_url;
-  if (!base_url || dest.indexOf(base_url) === -1) {
-    // Bail early if destination URL is not an allowed URL.
-    has_error = true;
-    error_msg = 'Destination URL is not a valid API URL.';
-  }
-
-  if (has_error) {
-    // Return the error response.
+  if (!api_url) {
+    // Bail early if provider is not supported.
+    const error_msg =
+      'The Instant Images Proxy is not configured for the requested provider.';
     return new Response(
       JSON.stringify({
         error: {
-          status: 503,
+          status: 404,
           statusText: error_msg
         }
       }),
       {
-        status: 503,
+        status: 404,
         statusText: error_msg,
         headers: getStandardHeaders()
       }
@@ -72,7 +62,7 @@ export default async function handler(req: NextRequest) {
   }
 
   const headers = getHeaders(provider, keys);
-  const url = getURL(provider, query, keys);
+  const url = getURL(api_url, provider, query, keys);
 
   try {
     const response = await fetch(url, { headers });
@@ -83,9 +73,7 @@ export default async function handler(req: NextRequest) {
     if (status === 200) {
       const data = await response.json();
       const formatted = formatData(data, provider, search); // Format results.
-      const results = sponsor
-        ? formatSponsorData(data, provider, search)
-        : formatted; // Inject sponsorship.
+      const results = sponsor ? getSponsor(formatted) : formatted; // Inject sponsorship.
       return new Response(JSON.stringify(results), {
         status: status,
         statusText: statusText,
