@@ -12,6 +12,3 @@ pre-commit:
     stylelint:
       glob: '*.{css,scss}'
       run: npx stylelint {staged_files} --fix
-    php:
-      glob: '*.php'
-      run: ./vendor/bin/phpcs {staged_files} --standard=.phpcs.xml
