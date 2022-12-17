@@ -36,7 +36,8 @@ export default function formatData(
   /**
    * Search by ID.
    *
-   * Note: Unsplash and Pexels return ID lookups as a single object.
+   * Note: Unsplash and Pexels return ID lookups as a single object response.
+   *       This converts ID lookups into an array.
    */
   results = searchByID ? [data] : results;
 

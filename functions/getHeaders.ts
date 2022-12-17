@@ -36,6 +36,7 @@ export function getResponseHeaders(res: Response): HeadersInit {
     'Access-Control-Expose-Headers':
       'X-RateLimit-Limit,X-RateLimit-Remaining,X-RateLimit-Reset',
     'Access-Control-Request-Method': '*',
+    'X-Frame-Options': 'DENY',
     'X-RateLimit-Limit': `${xratelimit}`,
     'X-RateLimit-Remaining': `${xratelimitremaining}`,
     'X-RateLimit-Reset': `${xratelimitreset}`

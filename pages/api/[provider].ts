@@ -15,6 +15,9 @@ export const config = {
 };
 
 export default async function handler(req: NextRequest) {
+  // Display sponsor results.
+  const sponsor = false;
+
   // Get all query params from incoming URL.
   const query = getParams(req.url);
 
@@ -33,44 +36,25 @@ export default async function handler(req: NextRequest) {
     pexels: key ? key : process.env.PEXELS_API_KEY
   };
 
-  // Display sponsor results.
-  const sponsor = false;
-
-  // Is this a search request?
-  const search = type === 'search';
-
-  let error = false;
-  let error_msg = '';
-
-  // No provider or type.
-  if (!provider || !type) {
-    // Bail early when provider doesn't exist.
-    error = true;
-    error_msg = 'No provider or API URL set.';
-  }
-
-  // Get API URLs.
+  // API URLs.
   const search_url = providers[provider as keyof typeof providers]?.api?.search;
   const photos_url = providers[provider as keyof typeof providers]?.api?.photos;
+  const search = type === 'search'; // Is this a search request?
   const api_url: string = search ? search_url : photos_url;
 
   if (!api_url) {
-    // Bail early if destination URL is not an allowed URL.
-    error = true;
-    error_msg = 'API URL is not valid.';
-  }
-
-  if (error) {
-    // Return the error response.
+    // Bail early if provider is not supported.
+    const error_msg =
+      'The Instant Images Proxy is not configured for the requested provider.';
     return new Response(
       JSON.stringify({
         error: {
-          status: 503,
+          status: 404,
           statusText: error_msg
         }
       }),
       {
-        status: 503,
+        status: 404,
         statusText: error_msg,
         headers: getStandardHeaders()
       }
