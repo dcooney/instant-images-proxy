@@ -4,10 +4,6 @@ const securityHeaders = [
     value: '1; mode=block'
   },
   {
-    key: 'X-Frame-Options',
-    value: 'deny'
-  },
-  {
     key: 'Access-Control-Allow-Origin',
     value: '*'
   },
