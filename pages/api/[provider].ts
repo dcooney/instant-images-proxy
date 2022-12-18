@@ -21,8 +21,13 @@ export default async function handler(req: NextRequest) {
   // Get all query params from incoming URL.
   const query = getParams(req.url);
 
+  let error_msg = '';
+  let error_code = 200;
+  let has_error = false;
+
   // Deconstruct URL params.
   const {
+    version = 0,
     provider = 'unsplash',
     type = 'photos',
     client_id = '',
@@ -42,19 +47,33 @@ export default async function handler(req: NextRequest) {
   const search = type === 'search'; // Is this a search request?
   const api_url: string = search ? search_url : photos_url;
 
+  if (parseInt(version as string) < 5 || !version) {
+    // Bail early if `version` parameter is missing.
+    error_msg =
+      'Missing API parameter - we are unable to complete the request at this time.';
+    error_code = 403;
+    has_error = true;
+  }
+
   if (!api_url) {
     // Bail early if provider is not supported.
-    const error_msg =
+    error_msg =
       'The Instant Images Proxy is not configured for the requested provider.';
+    error_code = 404;
+    has_error = true;
+  }
+
+  if (has_error) {
+    // Return error if required.
     return new Response(
       JSON.stringify({
         error: {
-          status: 404,
+          status: error_code,
           statusText: error_msg
         }
       }),
       {
-        status: 404,
+        status: error_code,
         statusText: error_msg,
         headers: getStandardHeaders()
       }

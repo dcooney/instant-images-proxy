@@ -38,6 +38,7 @@ export default function getURL(
   delete params?.type;
   delete params?.id;
   delete params?.test;
+  delete params?.version;
 
   // Build query params.
   const queryParams = {

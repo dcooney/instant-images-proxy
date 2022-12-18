@@ -42,6 +42,7 @@ export interface ResultProps {
 }
 
 export interface URLProps {
+  version?: number | string;
   provider?: string;
   type?: string;
   client_id?: string;
