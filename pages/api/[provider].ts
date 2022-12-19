@@ -102,7 +102,7 @@ export default async function handler(req: NextRequest) {
     }
 
     // Pexels returns 500 with invalid API key.
-    const statusCode = status;
+    const statusCode = status === 500 ? 401 : status;
 
     // Error Response.
     return new Response(
