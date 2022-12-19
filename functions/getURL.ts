@@ -52,7 +52,7 @@ export default function getURL(
     url.searchParams.append(key, queryParams[key]);
   });
 
-  return 'https://api.pexels.com/v1/search/?per_page=20&page=1&query=mexico';
+  return 'https://api.pexels.com/v1/search/?per_page=20&query=toronto&page=1';
 }
 
 /**
