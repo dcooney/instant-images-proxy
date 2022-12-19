@@ -87,7 +87,6 @@ export default async function handler(req: NextRequest) {
     const response = await fetch(url, { headers });
     const { status, statusText } = response;
     const resHeaders = getResponseHeaders(response);
-    console.log(status);
 
     // Success.
     if (status === 200) {
