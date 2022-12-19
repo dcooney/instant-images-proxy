@@ -108,12 +108,12 @@ export default async function handler(req: NextRequest) {
       JSON.stringify({
         error: {
           status: statusCode,
-          statusText: 'success error'
+          statusText: statusText
         }
       }),
       {
         status: statusCode,
-        statusText: 'success error',
+        statusText: statusText,
         headers: resHeaders
       }
     );
