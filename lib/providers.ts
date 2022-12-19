@@ -9,7 +9,8 @@ export default {
       search: 'https://api.unsplash.com/search/photos/'
     },
     headers: {
-      cacheControl: 'max-age=7200,stale-if-error=3600,stale-while-revalidate=60'
+      cacheControl:
+        'max-age=7200, stale-if-error=3600, stale-while-revalidate=60'
     }
   },
   pixabay: {
