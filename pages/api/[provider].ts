@@ -87,6 +87,7 @@ export default async function handler(req: NextRequest) {
     const response = await fetch(url, { headers });
     const { status, statusText } = response;
     const resHeaders = getResponseHeaders(response);
+    console.log(status);
 
     // Success.
     if (status === 200) {
@@ -101,7 +102,7 @@ export default async function handler(req: NextRequest) {
     }
 
     // Pexels returns 500 with invalid API key.
-    const statusCode = status === 500 ? 401 : status;
+    const statusCode = status;
 
     // Error Response.
     return new Response(

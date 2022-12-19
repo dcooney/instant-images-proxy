@@ -46,7 +46,7 @@ export default function getURL(
     ...getAPIVar(provider, keys[provider])
   };
 
-  // Build the final API URL.
+  // Build the final URL.
   const url = new URL(api_url);
   Object.keys(queryParams).forEach(key => {
     url.searchParams.append(key, queryParams[key]);
