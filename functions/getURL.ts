@@ -15,20 +15,20 @@ export default function getURL(
    * Download (Unsplash only).
    * @see https://help.unsplash.com/en/articles/2511258-guideline-triggering-a-download
    */
-  if (params.download_url) {
+  if (params?.download_url) {
     api_url = params.download_url; // Create download URL.
-    delete params?.download_url;
+    delete params.download_url;
   }
 
   // Search.
-  if (params.term) {
+  if (params?.term) {
     params[providers[provider as keyof typeof providers].search_var] =
       params.term;
-    delete params?.term;
+    delete params.term;
   }
 
   // Search by ID.
-  if (params.type === 'search' && params.id) {
+  if (params?.type === 'search' && params?.id) {
     api_url = getSearchIDUrl(provider, params.id);
     params = {};
   }
