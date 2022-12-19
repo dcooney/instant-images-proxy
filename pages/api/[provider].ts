@@ -75,7 +75,7 @@ export default async function handler(req: NextRequest) {
       {
         status: error_code,
         statusText: error_msg,
-        headers: getStandardHeaders()
+        headers: getStandardHeaders(provider)
       }
     );
   }
@@ -86,7 +86,7 @@ export default async function handler(req: NextRequest) {
   try {
     const response = await fetch(url, { headers });
     const { status, statusText } = response;
-    const resHeaders = getResponseHeaders(response);
+    const resHeaders = getResponseHeaders(provider, response);
 
     // Success.
     if (status === 200) {
@@ -129,7 +129,7 @@ export default async function handler(req: NextRequest) {
       {
         status: 500,
         statusText: 'Internal Server Error',
-        headers: getStandardHeaders()
+        headers: getStandardHeaders(provider)
       }
     );
   }

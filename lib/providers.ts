@@ -7,6 +7,9 @@ export default {
     api: {
       photos: 'https://api.unsplash.com/photos/',
       search: 'https://api.unsplash.com/search/photos/'
+    },
+    headers: {
+      cacheControl: 'max-age=7200,stale-if-error=3600,stale-while-revalidate=60'
     }
   },
   pixabay: {
@@ -17,6 +20,9 @@ export default {
     api: {
       photos: 'https://pixabay.com/api/',
       search: 'https://pixabay.com/api/'
+    },
+    headers: {
+      cacheControl: 'max-age=86400'
     }
   },
   pexels: {
@@ -27,6 +33,9 @@ export default {
     api: {
       photos: 'https://api.pexels.com/v1/curated/',
       search: 'https://api.pexels.com/v1/search/'
+    },
+    headers: {
+      cacheControl: 'max-age=0, private, must-revalidate'
     }
   }
 };

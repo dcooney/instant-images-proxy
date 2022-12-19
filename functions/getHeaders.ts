@@ -1,4 +1,5 @@
 import { APIKeyProps } from '~/lib/interfaces';
+import providers from '~/lib/providers';
 
 /**
  * Build the API fetch request headers.
@@ -26,13 +27,16 @@ export default function getHeaders(provider: string, keys: APIKeyProps) {
  * @see https://pixabay.com/api/docs/
  * @see https://www.pexels.com/api/documentation/#statistics
  */
-export function getResponseHeaders(res: Response): HeadersInit {
+export function getResponseHeaders(
+  provider: string,
+  res: Response
+): HeadersInit {
   const xratelimit = res.headers.get('X-Ratelimit-Limit');
   const xratelimitremaining = res.headers.get('X-Ratelimit-Remaining');
   const xratelimitreset = res.headers.get('X-Ratelimit-Reset');
 
   const headers = {
-    ...getStandardHeaders(),
+    ...getStandardHeaders(provider),
     'Access-Control-Expose-Headers':
       'X-RateLimit-Limit,X-RateLimit-Remaining,X-RateLimit-Reset',
     'Access-Control-Request-Method': '*',
@@ -48,9 +52,12 @@ export function getResponseHeaders(res: Response): HeadersInit {
 /**
  * Get standard API response headers for the frontend application.
  */
-export function getStandardHeaders() {
+export function getStandardHeaders(provider: string) {
+  const cacheControl =
+    providers[provider as keyof typeof providers]?.headers?.cacheControl;
+
   const headers = {
-    'Cache-Control': 's-maxage=1, stale-while-revalidate',
+    'Cache-Control': cacheControl,
     'Access-Control-Allow-Methods': 'GET',
     'Access-Control-Allow-Origin': '*'
   };
