@@ -46,13 +46,13 @@ export default function getURL(
     ...getAPIVar(provider, keys[provider])
   };
 
-  // Build the final URL.
+  // Build the final API URL.
   const url = new URL(api_url);
   Object.keys(queryParams).forEach(key => {
     url.searchParams.append(key, queryParams[key]);
   });
 
-  return url?.href;
+  return 'https://api.pexels.com/v1/search/?per_page=20&page=1&query=mexico';
 }
 
 /**
