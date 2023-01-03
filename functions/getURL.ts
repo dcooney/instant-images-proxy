@@ -56,7 +56,7 @@ export default function getURL(
 }
 
 /**
- * Get the API URL for searching by ID.
+ * Get the API URL for searching by photo ID.
  */
 function getSearchIDUrl(provider: string, id: string): string {
   let url = '';

@@ -100,19 +100,16 @@ export default async function handler(req: NextRequest) {
       });
     }
 
-    // Pexels returns 500 with invalid API key.
-    const statusCode = status === 500 ? 401 : status;
-
     // Error Response.
     return new Response(
       JSON.stringify({
         error: {
-          status: statusCode,
+          status: status,
           statusText: statusText
         }
       }),
       {
-        status: statusCode,
+        status: status,
         statusText: statusText,
         headers: resHeaders
       }
