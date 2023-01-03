@@ -36,7 +36,7 @@ export default {
       search: 'https://api.pexels.com/v1/search/'
     },
     headers: {
-      cacheControl: 'max-age=0, private, must-revalidate'
+      cacheControl: 'max-age=100, private, must-revalidate, stale-if-error=3600'
     }
   }
 };
