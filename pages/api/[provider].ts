@@ -85,7 +85,7 @@ export default async function handler(req: NextRequest) {
 
   try {
     const response = await fetch(
-      'https://api.pexels.com/v1/curated?page=4&per_page=40',
+      'https://api.pexels.com/v1/curated?page=6&per_page=20',
       {
         headers: {
           Authorization:
