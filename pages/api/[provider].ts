@@ -100,9 +100,8 @@ export default async function handler(req: NextRequest) {
       });
     }
 
-    // Note: Pexels returns 500 with invalid API key.
-
     // Error Response.
+    // Note: Pexels returns 500 with invalid API key.
     return new Response(
       JSON.stringify({
         error: {
