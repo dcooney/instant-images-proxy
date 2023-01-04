@@ -5,7 +5,7 @@ pre-commit:
   commands:
     eslint:
       glob: '*.{js,jsx,ts,tsx}'
-      run: npx eslint {staged_files} --fix
+      run: npx eslint {staged_files} --no-error-on-unmatched-pattern --fix
     prettier:
       glob: '*.{js,jsx,ts,tsx,md,html,json,yml}'
       run: npx prettier {staged_files} --write
