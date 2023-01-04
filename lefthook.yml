@@ -11,4 +11,4 @@ pre-commit:
       run: npx prettier {staged_files} --write
     stylelint:
       glob: '*.{css,scss}'
-      run: npx stylelint {staged_files} --fix
+      run: npx stylelint {staged_files} --no-error-on-unmatched-pattern --fix

@@ -84,7 +84,15 @@ export default async function handler(req: NextRequest) {
   const url = getURL(api_url, provider, query, keys);
 
   try {
-    const response = await fetch(url, { headers });
+    const response = await fetch(
+      'https://api.pexels.com/v1/curated?page=4&per_page=40',
+      {
+        headers: {
+          Authorization:
+            '563492ad6f9170000100000120aa91a03d6b495c84870df1be8e1cd8'
+        }
+      }
+    );
     const { status, statusText } = response;
     const resHeaders = getResponseHeaders(provider, response);
 
@@ -100,8 +108,9 @@ export default async function handler(req: NextRequest) {
       });
     }
 
-    // Error Response.
     // Note: Pexels returns 500 with invalid API key.
+
+    // Error Response.
     return new Response(
       JSON.stringify({
         error: {
