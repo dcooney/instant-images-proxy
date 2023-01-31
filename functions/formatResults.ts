@@ -25,6 +25,7 @@ export default function formatData(
   switch (provider) {
     case 'pixabay':
     case 'pexels':
+    case 'openverse':
       results = data[key];
       break;
 
@@ -44,7 +45,7 @@ export default function formatData(
   // Build the new data object.
   const obj: ResultsProps = {
     total: searchByID ? results.length : getTotal(data, provider),
-    results: buildResults(results, provider)
+    results: buildResults(results, provider),
   };
 
   return obj;
@@ -59,19 +60,21 @@ function buildResultObj(result: object | any, provider: string): ResultProps {
     id: getProp(result, provider, 'id'),
     permalink: getProp(result, provider, 'permalink'),
     likes: getProp(result, provider, 'likes'),
+    alt: getProp(result, provider, 'alt'),
+    caption: getProp(result, provider, 'caption'),
+    description: getProp(result, provider, 'description'),
     urls: {
       thumb: getProp(result, provider, 'thumb'),
       img: getProp(result, provider, 'img'),
       full: getProp(result, provider, 'full'),
-      alt: getProp(result, provider, 'alt'),
-      download_url: getProp(result, provider, 'download_url')
+      download_url: getProp(result, provider, 'download_url'),
     },
     user: {
       username: getProp(result, provider, 'user_id'),
       name: getProp(result, provider, 'user_name'),
       photo: getProp(result, provider, 'user_photo'),
-      url: getProp(result, provider, 'user_url')
-    }
+      url: getProp(result, provider, 'user_url'),
+    },
   };
 
   return data;
@@ -91,6 +94,7 @@ function buildResults(results: DataProps, provider: string): any {
 
 /**
  * Get the total number of results from API response.
+ * Note: API responses vary so we need to pluck result totals from different object keys.
  */
 function getTotal(data: DataProps, provider: string): number | string {
   let total = 0;
@@ -99,9 +103,24 @@ function getTotal(data: DataProps, provider: string): number | string {
       total = data?.total_results;
       break;
 
+    case 'openverse':
+      total = data?.result_count;
+      break;
+
     default:
       total = data?.total;
       break;
   }
   return total;
+}
+
+/**
+ * Get the API key/value pair and append to query.
+ */
+export function getAPIVar(provider: string, value: string): object {
+  return provider !== 'pexels' && provider !== 'openverse'
+    ? {
+        [providers[provider as keyof typeof providers].api_var]: value,
+      }
+    : {};
 }

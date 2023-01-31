@@ -1,6 +1,6 @@
 import { APIKeyProps, ParamProps } from '~/lib/interfaces';
 import providers from '~/lib/providers';
-import getAPIVar from './getAPIVar';
+import { getAPIVar } from './formatResults';
 
 /**
  * Build the API URL.
@@ -43,12 +43,12 @@ export default function getURL(
   // Build query params.
   const queryParams = {
     ...params,
-    ...getAPIVar(provider, keys[provider])
+    ...getAPIVar(provider, keys[provider]),
   };
 
   // Build the final API URL.
   const url = new URL(api_url);
-  Object.keys(queryParams).forEach(key => {
+  Object.keys(queryParams).forEach((key) => {
     url.searchParams.append(key, queryParams[key]);
   });
 
