@@ -32,6 +32,7 @@ export default function getURL(
     api_url = getSearchIDUrl(provider, params.id);
     params = {};
   }
+  params.mature = false;
 
   // Delete the following params before sending API request to providers.
   delete params?.provider;

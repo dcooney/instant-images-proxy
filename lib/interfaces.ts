@@ -27,7 +27,8 @@ export interface ResultProps {
   likes: any;
   alt: any;
   caption: any;
-  description: any;
+  title: any;
+  attribution: any;
   extension: any;
   urls: {
     thumb: any;
@@ -36,7 +37,7 @@ export interface ResultProps {
     download_url: any;
   };
   user: {
-    username: any;
+    id: any;
     name: any;
     photo: any;
     url: any;

@@ -1,6 +1,12 @@
 import { DataProps, ResultProps, ResultsProps } from '~/lib/interfaces';
 import providers from '~/lib/providers';
-import getProp from './getProp';
+import getProp, {
+  getAttribution,
+  getImageTitle,
+  getPermalink,
+  getUsername,
+  getUserURL,
+} from './getProp';
 
 /**
  * Format API results to return required data in a normalized response across providers.
@@ -58,11 +64,12 @@ export default function formatData(
 function buildResultObj(result: object | any, provider: string): ResultProps {
   const data: ResultProps = {
     id: getProp(result, provider, 'id'),
-    permalink: getProp(result, provider, 'permalink'),
+    permalink: getPermalink(result, provider),
     likes: getProp(result, provider, 'likes'),
     alt: getProp(result, provider, 'alt'),
     caption: getProp(result, provider, 'caption'),
-    description: getProp(result, provider, 'description'),
+    title: getImageTitle(result, provider),
+    attribution: getAttribution(result, provider),
     extension: getProp(result, provider, 'extension'),
     urls: {
       thumb: getProp(result, provider, 'thumb'),
@@ -71,10 +78,10 @@ function buildResultObj(result: object | any, provider: string): ResultProps {
       download_url: getProp(result, provider, 'download_url'),
     },
     user: {
-      username: getProp(result, provider, 'user_id'),
-      name: getProp(result, provider, 'user_name'),
+      id: getProp(result, provider, 'user_id'),
+      name: getUsername(result, provider),
       photo: getProp(result, provider, 'user_photo'),
-      url: getProp(result, provider, 'user_url'),
+      url: getUserURL(result, provider),
     },
   };
 
