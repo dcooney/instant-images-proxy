@@ -17,7 +17,6 @@ export default function getProp(
       value = result?.id;
       break;
 
-    // Thumbnail.
     case 'thumb':
       if (provider === 'pixabay') {
         value = result?.previewURL;
@@ -29,28 +28,11 @@ export default function getProp(
         value = result?.src?.tiny;
       }
       if (provider === 'openverse') {
-        // value = result?.thumbnail; // Doesn't always work with SVG.
-        value = result?.url;
+        const ext = getFileExtension(result, provider);
+        value = ext === 'svg' ? result?.url : result?.thumbnail; // result?.thumbnail; // Doesn't always work with SVG.
       }
       break;
 
-    // Grid Preview.
-    case 'img':
-      if (provider === 'pixabay') {
-        value = result?.webformatURL;
-      }
-      if (provider === 'unsplash') {
-        value = result?.urls?.small;
-      }
-      if (provider === 'pexels') {
-        value = result?.src?.large;
-      }
-      if (provider === 'openverse') {
-        value = result?.url;
-      }
-      break;
-
-    // Full Size.
     case 'full':
       if (provider === 'pixabay') {
         value = result?.largeImageURL;
@@ -66,7 +48,6 @@ export default function getProp(
       }
       break;
 
-    // Download URL (Tracking).
     case 'download_url':
       if (provider === 'pixabay') {
         value = false;
@@ -82,16 +63,6 @@ export default function getProp(
       }
       break;
 
-    case 'extension':
-      if (provider === 'openverse') {
-        value = result?.url.substr(result?.url.lastIndexOf('.') + 1);
-      } else {
-        value = 'jpg';
-      }
-
-      break;
-
-    // Full Size.
     case 'user_id':
       if (provider === 'pixabay') {
         value = result?.user_id;
@@ -163,12 +134,6 @@ export default function getProp(
         value = result?.alt;
       }
       break;
-
-    case 'description':
-      if (provider === 'openverse') {
-        value = result?.attribution;
-      }
-      break;
   }
 
   return value ? value : null;
@@ -190,6 +155,19 @@ export function getPermalink(result: object | any, provider: string) {
 
     case 'openverse':
       return result?.foreign_landing_url;
+  }
+}
+
+/**
+ * Get the file extension.
+ */
+export function getFileExtension(result: object | any, provider: string) {
+  switch (provider) {
+    case 'openverse':
+      return result?.url.substr(result?.url.lastIndexOf('.') + 1);
+
+    default:
+      return 'jpg';
   }
 }
 
