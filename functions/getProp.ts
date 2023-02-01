@@ -78,6 +78,15 @@ export default function getProp(
       }
       break;
 
+    case 'extension':
+      if (provider === 'openverse') {
+        value = result?.url.substr(result?.url.lastIndexOf('.') + 1);
+      } else {
+        value = 'jpg';
+      }
+
+      break;
+
     case 'user_id':
       if (provider === 'pixabay') {
         value = result?.user_id;

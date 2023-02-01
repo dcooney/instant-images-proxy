@@ -63,6 +63,7 @@ function buildResultObj(result: object | any, provider: string): ResultProps {
     alt: getProp(result, provider, 'alt'),
     caption: getProp(result, provider, 'caption'),
     description: getProp(result, provider, 'description'),
+    extension: getProp(result, provider, 'extension'),
     urls: {
       thumb: getProp(result, provider, 'thumb'),
       img: getProp(result, provider, 'img'),

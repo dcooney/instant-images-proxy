@@ -28,6 +28,7 @@ export interface ResultProps {
   alt: any;
   caption: any;
   description: any;
+  extension: any;
   urls: {
     thumb: any;
     img: any;
