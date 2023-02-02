@@ -63,7 +63,7 @@ export default function formatData(
  * We construct this object to normalize the response of all sevice providers.
  */
 function buildResultObj(result: object | any, provider: string): ResultProps {
-  const extension = getFileExtension(result, provider);
+  const thumbnail = getProp(result, provider, 'thumb');
 
   const data: ResultProps = {
     id: getProp(result, provider, 'id'),
@@ -73,10 +73,10 @@ function buildResultObj(result: object | any, provider: string): ResultProps {
     caption: getProp(result, provider, 'caption'),
     title: getImageTitle(result, provider),
     attribution: getAttribution(result, provider),
-    extension: extension,
+    extension: getFileExtension(result, provider),
     urls: {
-      thumb: getProp(result, provider, 'thumb'),
-      img: getProp(result, provider, 'thumb'),
+      thumb: thumbnail,
+      img: thumbnail,
       full: getProp(result, provider, 'full'),
       download_url: getProp(result, provider, 'download_url'),
     },
