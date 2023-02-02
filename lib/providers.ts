@@ -27,7 +27,7 @@ export default {
     }
   },
   pexels: {
-    api_var: 'key',
+    api_var: '',
     arr_key: 'photos',
     base_url: 'https://pexels.com',
     search_var: 'query',
@@ -36,7 +36,20 @@ export default {
       search: 'https://api.pexels.com/v1/search/'
     },
     headers: {
-      cacheControl: 'max-age=0, private, must-revalidate'
+      cacheControl: 'no-cache'
+    }
+  },
+  openverse: {
+    api_var: '',
+    arr_key: 'results',
+    base_url: 'https://wordpress.org/openverse/',
+    search_var: 'q',
+    api: {
+      photos: 'https://api.openverse.engineering/v1/images',
+      search: 'https://api.openverse.engineering/v1/images'
+    },
+    headers: {
+      cacheControl: 'no-cache'
     }
   }
 };

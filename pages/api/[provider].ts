@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import formatData from '~/functions/formatResults';
 import getHeaders, {
   getResponseHeaders,
-  getStandardHeaders
+  getStandardHeaders,
 } from '~/functions/getHeaders';
 import getParams from '~/functions/getParams';
 import getSponsor from '~/functions/getSponsor';
@@ -11,7 +11,7 @@ import { APIKeyProps, URLProps } from '~/lib/interfaces';
 import providers from '~/lib/providers';
 
 export const config = {
-  runtime: 'experimental-edge'
+  runtime: 'experimental-edge',
 };
 
 export default async function handler(req: NextRequest) {
@@ -31,14 +31,14 @@ export default async function handler(req: NextRequest) {
     provider = 'unsplash',
     type = 'photos',
     client_id = '',
-    key = ''
+    key = '',
   }: URLProps = query;
 
   // Get API keys.
   const keys: APIKeyProps = {
     unsplash: client_id ? client_id : process.env.UNSPLASH_API_KEY,
     pixabay: key ? key : process.env.PIXABAY_API_KEY,
-    pexels: key ? key : process.env.PEXELS_API_KEY
+    pexels: key ? key : process.env.PEXELS_API_KEY,
   };
 
   // API URLs.
@@ -69,13 +69,13 @@ export default async function handler(req: NextRequest) {
       JSON.stringify({
         error: {
           status: error_code,
-          statusText: error_msg
-        }
+          statusText: error_msg,
+        },
       }),
       {
         status: error_code,
         statusText: error_msg,
-        headers: getStandardHeaders(provider)
+        headers: getStandardHeaders(provider),
       }
     );
   }
@@ -96,7 +96,7 @@ export default async function handler(req: NextRequest) {
       return new Response(JSON.stringify(results), {
         status: status,
         statusText: statusText,
-        headers: resHeaders
+        headers: resHeaders,
       });
     }
 
@@ -106,13 +106,13 @@ export default async function handler(req: NextRequest) {
       JSON.stringify({
         error: {
           status: status,
-          statusText: statusText
-        }
+          statusText: statusText,
+        },
       }),
       {
         status: status,
         statusText: statusText,
-        headers: resHeaders
+        headers: resHeaders,
       }
     );
   } catch (error) {
@@ -121,13 +121,13 @@ export default async function handler(req: NextRequest) {
       JSON.stringify({
         error: {
           status: 500,
-          statusText: error
-        }
+          statusText: error,
+        },
       }),
       {
         status: 500,
         statusText: 'Internal Server Error',
-        headers: getStandardHeaders(provider)
+        headers: getStandardHeaders(provider),
       }
     );
   }

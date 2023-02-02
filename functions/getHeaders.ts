@@ -9,7 +9,7 @@ export default function getHeaders(provider: string, keys: APIKeyProps) {
   switch (provider) {
     case 'pexels':
       headers = {
-        Authorization: keys.pexels
+        Authorization: keys.pexels,
       };
       break;
 
@@ -43,7 +43,7 @@ export function getResponseHeaders(
     'X-Frame-Options': 'DENY',
     'X-RateLimit-Limit': `${xratelimit}`,
     'X-RateLimit-Remaining': `${xratelimitremaining}`,
-    'X-RateLimit-Reset': `${xratelimitreset}`
+    'X-RateLimit-Reset': `${xratelimitreset}`,
   };
 
   return headers;
@@ -59,7 +59,7 @@ export function getStandardHeaders(provider: string) {
   const headers = {
     'Cache-Control': cacheControl,
     'Access-Control-Allow-Methods': 'GET',
-    'Access-Control-Allow-Origin': '*'
+    'Access-Control-Allow-Origin': '*',
   };
 
   return headers;

@@ -25,15 +25,19 @@ export interface ResultProps {
   id: any;
   permalink: any;
   likes: any;
+  alt: any;
+  caption: any;
+  title: any;
+  attribution: any;
+  extension: any;
   urls: {
     thumb: any;
     img: any;
     full: any;
-    alt: any;
     download_url: any;
   };
   user: {
-    username: any;
+    id: any;
     name: any;
     photo: any;
     url: any;
