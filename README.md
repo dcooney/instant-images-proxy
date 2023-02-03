@@ -1,6 +1,6 @@
 # Instant Images Proxy Server
 
-A small proxy server for [Instant Images](https://github.com/dcooney/instant-images) built with Next.js using [Edge](https://vercel.com/docs/concepts/functions/edge-functions) runtime functionality to serve images from the [Unsplash](http://unsplash.com), [Openverse](https://wordpress.org/openverse/), [Pixabay](http://pixabay.com) & [Pexels](http://pexels.com) APIs.
+A small proxy server for [Instant Images](https://github.com/dcooney/instant-images) built with Next.js and [Edge](https://vercel.com/docs/concepts/functions/edge-functions) runtime functions to serve images from the [Unsplash](http://unsplash.com), [Openverse](https://wordpress.org/openverse/), [Pixabay](http://pixabay.com) & [Pexels](http://pexels.com) APIs.
 
 ## Getting Started
 
