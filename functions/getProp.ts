@@ -232,9 +232,7 @@ export function getImageTitle(result: object | any, provider: string) {
 export function getAttribution(result: any, provider: string) {
   const username = getUsername(result, provider);
   const user_url = getUserURL(result, provider);
-  const user = user_url
-    ? `<a href="${user_url}" rel="noopener noreferrer">${username}</a>`
-    : username;
+  const user = user_url ? generateLink(user_url, username) : username;
 
   switch (provider) {
     case 'openverse':
