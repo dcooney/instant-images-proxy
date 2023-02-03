@@ -22,7 +22,7 @@ export default function getProp(
         value = result?.previewURL;
       }
       if (provider === 'unsplash') {
-        value = result?.urls?.thumb;
+        value = result?.urls?.small;
       }
       if (provider === 'pexels') {
         value = result?.src?.tiny;
