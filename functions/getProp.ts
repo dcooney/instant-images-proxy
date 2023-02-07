@@ -19,7 +19,7 @@ export default function getProp(
 
     case 'thumb':
       if (provider === 'pixabay') {
-        value = result?.previewURL;
+        value = result?.webformatURL;
       }
       if (provider === 'unsplash') {
         value = result?.urls?.small;
