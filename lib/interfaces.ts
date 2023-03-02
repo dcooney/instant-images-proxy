@@ -30,6 +30,7 @@ export interface ResultProps {
   title: any;
   attribution: any;
   extension: any;
+  dimensions: any;
   urls: {
     thumb: any;
     img: any;

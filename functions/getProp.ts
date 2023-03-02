@@ -134,6 +134,30 @@ export default function getProp(
         value = result?.alt;
       }
       break;
+
+    case 'dimensions':
+      if (provider === 'pixabay') {
+        const imageWidth = result?.imageWidth;
+        const imageHeight = result?.imageHeight;
+        if (imageWidth && imageHeight) {
+          // Generate image dimensions from full size.
+          const percent = 1280 / imageWidth;
+          value = `${Math.round(imageWidth * percent)} x ${Math.round(
+            imageHeight * percent
+          )}`;
+        }
+      }
+      if (
+        provider === 'unsplash' ||
+        provider === 'pexels' ||
+        provider === 'openverse'
+      ) {
+        value =
+          result?.width && result?.height
+            ? `${result.width} x ${result.height}`
+            : null; // 1600x900
+      }
+      break;
   }
 
   return value ? value : null;

@@ -74,6 +74,7 @@ function buildResultObj(result: object | any, provider: string): ResultProps {
     title: getImageTitle(result, provider),
     attribution: getAttribution(result, provider),
     extension: getFileExtension(result, provider),
+    dimensions: getProp(result, provider, 'dimensions'),
     urls: {
       thumb: thumbnail,
       img: thumbnail,
