@@ -47,10 +47,9 @@ export default async function handler(req: NextRequest) {
   const search = type === 'search'; // Is this a search request?
   const api_url: string = search ? search_url : photos_url;
 
-  if (parseInt(version as string) < 5 || !version) {
+  if (isNaN(parseInt(version as string)) || parseInt(version as string) < 5) {
     // Bail early if `version` parameter is missing.
-    error_msg =
-      'Missing API parameter - we are unable to complete the request at this time.';
+    error_msg = 'We are unable to complete the request at this time.';
     error_code = 403;
     has_error = true;
   }
