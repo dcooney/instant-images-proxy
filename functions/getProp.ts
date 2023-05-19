@@ -25,7 +25,7 @@ export default function getProp(
         value = result?.urls?.small;
       }
       if (provider === 'pexels') {
-        value = result?.src?.tiny;
+        value = result?.src?.medium;
       }
       if (provider === 'openverse') {
         const ext = getFileExtension(result, provider);
