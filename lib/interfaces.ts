@@ -6,6 +6,7 @@ export interface ProviderProps {
   api: {
     photos: string;
     search: string;
+    random?: string;
   };
 }
 

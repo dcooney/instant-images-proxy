@@ -15,11 +15,12 @@ import getProp, {
 export default function formatData(
   data: DataProps,
   provider: string,
-  search: boolean
+  type: string
 ): DataProps {
   let results: DataProps = [];
 
   const key = providers[provider as keyof typeof providers]?.arr_key;
+  const search = type === 'search';
   const searchByID = search && data?.id;
 
   /**
@@ -37,7 +38,11 @@ export default function formatData(
       break;
 
     case 'unsplash':
-      results = search ? data[key] : data;
+      if (type === 'random') {
+        results = [data]; // Type random, convert to array array.
+      } else {
+        results = search ? data[key] : data;
+      }
       break;
   }
 

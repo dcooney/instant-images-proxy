@@ -44,8 +44,20 @@ export default async function handler(req: NextRequest) {
   // API URLs.
   const search_url = providers[provider as keyof typeof providers]?.api?.search;
   const photos_url = providers[provider as keyof typeof providers]?.api?.photos;
-  const search = type === 'search'; // Is this a search request?
-  const api_url: string = search ? search_url : photos_url;
+  const random_url = providers[provider as keyof typeof providers]?.api?.random;
+
+  let api_url = '';
+  switch (type) {
+    case 'search':
+      api_url = search_url;
+      break;
+    case 'random':
+      api_url = random_url;
+      break;
+    default:
+      api_url = photos_url;
+      break;
+  }
 
   if (isNaN(parseInt(version as string)) || parseInt(version as string) < 5) {
     // Bail early if `version` parameter is missing.
@@ -90,7 +102,7 @@ export default async function handler(req: NextRequest) {
     // Success.
     if (status === 200) {
       const data = await response.json();
-      const formatted = formatData(data, provider, search); // Format results.
+      const formatted = formatData(data, provider, type); // Format results.
       const results = sponsor ? getSponsor(formatted) : formatted; // Inject sponsorship.
       return new Response(JSON.stringify(results), {
         status: status,
